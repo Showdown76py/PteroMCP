@@ -32,7 +32,17 @@ cd PteroMCP
 python3 -m pip install -e .
 ```
 
-Python 3.10+ is required.
+Python 3.10+ is required. `pipx install -e .` works too if you prefer an
+isolated environment.
+
+Once installed, locate the absolute path of the `pteromcp` binary — both
+Claude Desktop and Claude Code spawn it without your shell's `PATH`, so
+you'll want this path for the config below:
+
+```bash
+which pteromcp
+# e.g. /Library/Frameworks/Python.framework/Versions/3.13/bin/pteromcp
+```
 
 ### 2. Configure
 
@@ -56,15 +66,24 @@ per-user tools (power signals, console, files, backups, schedules).
 pteromcp           # or `python -m pteromcp`
 ```
 
-The server talks MCP over stdio. To wire it into Claude Desktop, add an
-entry to `~/Library/Application Support/Claude/claude_desktop_config.json`
-(macOS) or the equivalent on your platform:
+The server talks MCP over stdio.
+
+#### Claude Desktop
+
+Edit your Claude Desktop config file and add an `mcpServers` entry. The
+file lives at:
+
+| OS      | Path                                                                     |
+| ------- | ------------------------------------------------------------------------ |
+| macOS   | `~/Library/Application Support/Claude/claude_desktop_config.json`        |
+| Linux   | `~/.config/Claude/claude_desktop_config.json`                            |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json`                            |
 
 ```json
 {
   "mcpServers": {
     "pteromcp": {
-      "command": "pteromcp",
+      "command": "/absolute/path/to/pteromcp",
       "env": {
         "PTEROMCP_PANEL_URL": "https://panel.example.com",
         "PTEROMCP_APPLICATION_KEY": "papp_XXXXXXXXXXXXXXXXXXXXXXXX",
@@ -75,14 +94,48 @@ entry to `~/Library/Application Support/Claude/claude_desktop_config.json`
 }
 ```
 
-For Claude Code:
+Quit Claude Desktop fully (Cmd+Q on macOS) and relaunch — it only re-reads
+this file on startup.
+
+> Some internal / preview builds of Claude Desktop manage MCP servers from
+> their own settings UI and rewrite this file on launch. If your edits get
+> wiped, add the server via `Settings → Developer / Extensions` inside the
+> app instead.
+
+#### Claude Code
 
 ```bash
-claude mcp add pteromcp -- pteromcp
+claude mcp add pteromcp \
+  --scope user \
+  --env PTEROMCP_PANEL_URL=https://panel.example.com \
+  --env PTEROMCP_APPLICATION_KEY=papp_XXXXXXXXXXXXXXXXXXXXXXXX \
+  -- /absolute/path/to/pteromcp
 ```
 
-Then export the env vars before starting Claude Code, or pass them via
-`--env KEY=VALUE` on the `claude mcp add` line.
+`--scope user` registers the server globally instead of just the current
+project. Drop the `--env` flags or add more (e.g. `PTEROMCP_CLIENT_KEY`,
+`PTEROMCP_READ_ONLY`) as needed.
+
+#### Verify
+
+In either client, ask the model to call the `panel_info` tool. You should
+get back something like:
+
+```json
+{
+  "pteromcp_version": "0.1.0",
+  "panel_url": "https://panel.example.com",
+  "panel_type": "pelican",
+  "application_key_configured": true,
+  "client_key_configured": false,
+  "read_only": false,
+  "enabled_categories": ["allocations", "client", "databases", "eggs",
+                         "mounts", "nodes", "roles", "servers", "users"]
+}
+```
+
+If `panel_type` shows `detection-failed: …`, the URL or the API key is
+wrong; the error message tells you which.
 
 ## Configuration reference
 
