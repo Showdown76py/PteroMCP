@@ -52,13 +52,19 @@ API key:
 ```bash
 PTEROMCP_PANEL_URL=https://panel.example.com
 PTEROMCP_APPLICATION_KEY=papp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-# Optional: PTEROMCP_CLIENT_KEY=ptlc_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# Optional: PTEROMCP_CLIENT_KEY=pacc_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  # Pelican (or ptlc_… on Pterodactyl)
 ```
 
-You can get an application key from your panel's admin UI (`Application
-API`) and a client key from your user account settings (`API
-Credentials`). You only need a client key if you intend to expose the
-per-user tools (power signals, console, files, backups, schedules).
+You can get an application key from your panel's admin UI (`Admin →
+Application API`) and a client key from your own user account settings
+(`Account → API Credentials`, usually at
+`https://your-panel/account/api`). You only need a client key if you
+intend to expose the per-user tools (power signals, console, files,
+backups, schedules).
+
+> Pelican only shows the secret of a freshly created client key **once**,
+> in a modal. Copy it in full before closing — if you lose it you must
+> delete the key and create a new one.
 
 ### 3. Run
 
@@ -87,7 +93,7 @@ file lives at:
       "env": {
         "PTEROMCP_PANEL_URL": "https://panel.example.com",
         "PTEROMCP_APPLICATION_KEY": "papp_XXXXXXXXXXXXXXXXXXXXXXXX",
-        "PTEROMCP_CLIENT_KEY": "ptlc_XXXXXXXXXXXXXXXXXXXXXXXX"
+        "PTEROMCP_CLIENT_KEY": "pacc_XXXXXXXXXXXXXXXXXXXXXXXX"
       }
     }
   }
@@ -143,7 +149,7 @@ wrong; the error message tells you which.
 | --------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `PTEROMCP_PANEL_URL`              | —       | Base URL of the panel. Required.                                                                                                                  |
 | `PTEROMCP_APPLICATION_KEY`        | —       | Admin API key (`ptla_…` on Pterodactyl, `papp_…` on Pelican). Required for the application-surface tools.                                         |
-| `PTEROMCP_CLIENT_KEY`             | —       | Per-user API key (`ptlc_…` on both panels). Required for client-surface tools.                                                                    |
+| `PTEROMCP_CLIENT_KEY`             | —       | Per-user API key (`ptlc_…` on Pterodactyl, `pacc_…` on Pelican). Required for client-surface tools.                                               |
 | `PTEROMCP_PANEL_TYPE`             | `auto`  | One of `auto`, `pterodactyl`, `pelican`.                                                                                                          |
 | `PTEROMCP_TIMEOUT`                | `30`    | HTTP timeout in seconds.                                                                                                                          |
 | `PTEROMCP_READ_ONLY`              | `false` | When `true`, the server refuses every mutating tool (POST/PATCH/PUT/DELETE). Useful for exploration.                                              |
