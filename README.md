@@ -89,8 +89,8 @@ Then export the env vars before starting Claude Code, or pass them via
 | Variable                          | Default | Description                                                                                                                                       |
 | --------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `PTEROMCP_PANEL_URL`              | —       | Base URL of the panel. Required.                                                                                                                  |
-| `PTEROMCP_APPLICATION_KEY`        | —       | Admin API key (`papp_…` on Pelican, `ptla_…` on Pterodactyl). Required for the application-surface tools.                                         |
-| `PTEROMCP_CLIENT_KEY`             | —       | Per-user API key. Required for client-surface tools.                                                                                              |
+| `PTEROMCP_APPLICATION_KEY`        | —       | Admin API key (`ptla_…` on Pterodactyl, `papp_…` on Pelican). Required for the application-surface tools.                                         |
+| `PTEROMCP_CLIENT_KEY`             | —       | Per-user API key (`ptlc_…` on both panels). Required for client-surface tools.                                                                    |
 | `PTEROMCP_PANEL_TYPE`             | `auto`  | One of `auto`, `pterodactyl`, `pelican`.                                                                                                          |
 | `PTEROMCP_TIMEOUT`                | `30`    | HTTP timeout in seconds.                                                                                                                          |
 | `PTEROMCP_READ_ONLY`              | `false` | When `true`, the server refuses every mutating tool (POST/PATCH/PUT/DELETE). Useful for exploration.                                              |
